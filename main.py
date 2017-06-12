@@ -1,3 +1,4 @@
+import argparse
 import sys
 from typing import Tuple
 
@@ -58,21 +59,62 @@ def quitter() -> None:
     sys.exit()
 
 # =====================================================================
-# Game loop
+# Game functions
 
 
-while True:
-    try:
-        DISPLAYSURF.fill(BLACK)
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                quitter()
+def setup(pattern, iterations, fps):
+    """
+    Used to process argparse values overrides the global default configuration
+    generating new values using the given parameters (if truthy).
+    """
+    global GAME_PATTERN
+    global GAME_PATTERN_SIZE
+    global GAME_STATE
+    global ITERATIONS
+    global FPS
 
-        for x, y in next(GAME_STATE):
-            draw_cell(x, y)
+    if pattern:
+        GAME_PATTERN = states.generate_from_file(pattern)
+        GAME_PATTERN_SIZE = states.get_size(GAME_PATTERN)
+    if iterations:
+        ITERATIONS = iterations
+    if fps:
+        FPS = fps
 
-        TIMER.tick(FPS)
-        pygame.display.update()
+    if pattern or iterations:
+        GAME_STATE = game.generate(GAME_PATTERN, ITERATIONS)
 
-    except StopIteration:
-        quitter()
+
+def main():
+    """Main pygame loop."""
+    while True:
+        try:
+            DISPLAYSURF.fill(BLACK)
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    quitter()
+
+            for x, y in next(GAME_STATE):
+                draw_cell(x, y)
+
+            TIMER.tick(FPS)
+            pygame.display.update()
+
+        except StopIteration:
+            quitter()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p', '--pattern',
+                        help='Path to the initial pattern.')
+
+    parser.add_argument('-i', '--iterations', type=int,
+                        help='Number of iterations to perform.')
+    parser.add_argument('-f', '--fps', type=int,
+                        help='Frames per seconds to render.')
+    args = parser.parse_args()
+
+    if args.pattern or args.iterations or args.fps:
+        setup(args.pattern, args.iterations, args.fps)
+    main()
