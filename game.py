@@ -5,9 +5,9 @@ from typing import Generator, Tuple
 def neighbors(point: Tuple[int]) -> Generator[Tuple[int, int], None, None]:
     """Generate all neighboring cells from a (x, y) coordinates tuple."""
     x, y = point
-    main_axis = ((1, 0), (-1, 0), (0, 1), (0, -1))
-    diagonals = ((1, 1), (1, -1), (-1, 1), (-1, -1))
-    for dx, dy in itertools.chain(main_axis, diagonals):
+    delta_orthogonal = ((1, 0), (-1, 0), (0, 1), (0, -1))
+    delta_diagonal = ((1, 1), (1, -1), (-1, 1), (-1, -1))
+    for dx, dy in itertools.chain(delta_orthogonal, delta_diagonal):
         yield (x + dx, y + dy)
 
 
