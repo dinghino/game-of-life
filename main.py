@@ -1,9 +1,9 @@
 import sys
-import pygame
 from typing import Tuple
-from pygame.locals import QUIT
 
+import pygame
 from game import game, states
+from pygame.locals import QUIT
 
 # =====================================================================
 # Basic setup and constants
