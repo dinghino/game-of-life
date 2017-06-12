@@ -22,7 +22,7 @@ FPS = 10
 # -- Game of Life setup -----------------------------------------------
 ITERATIONS = 1000
 GAME_PATTERN = states.generate_from_file('./patterns/124p37.lif')
-GAME_STATE = game.play(GAME_PATTERN, ITERATIONS)
+GAME_STATE = game.conway(GAME_PATTERN, ITERATIONS)
 
 # NOTE that the duration of the game is (ITERATIONS / FPS) seconds
 

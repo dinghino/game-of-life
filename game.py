@@ -22,7 +22,11 @@ def next_state(state: set) -> set:
     return new_state
 
 
-def play(initial_state, iterations=100):
+def generate(initial_state, iterations=100):
+    """
+    Generator function that performs <iterations> iterations following the
+    conway's laws on the given initial_state and yields board states.
+    """
     state = initial_state
     for _ in range(iterations):
         state = next_state(state)
