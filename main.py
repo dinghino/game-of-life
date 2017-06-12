@@ -29,12 +29,19 @@ GAME_STATE = game.generate(GAME_PATTERN, ITERATIONS)
 # =====================================================================
 # Pygame setup
 
+pygame.init()
+pygame.font.init()
 
 TIMER = pygame.time.Clock()
 DISPLAYSURF = pygame.display.set_mode(WINDOW_SIZE)
+PY_FONT = pygame.font.SysFont('monospace', 12)
+
 pygame.display.set_caption('Game of Life')
 
-pygame.init()
+# string constant used to render the iteration counter by counter_text()
+COUNTER_STRING = '{0:0{2}d}/{1}'
+COUNTER_ZERO_PADDING = len(str(ITERATIONS))
+
 
 # =====================================================================
 # Utilities
@@ -52,6 +59,15 @@ def draw_cell(x: int, y: int) -> None:
     """Wrapper for the pygame.draw.rect call."""
     x, y = correct_coordinate(x, y)
     pygame.draw.rect(DISPLAYSURF, WHITE, (x, y, CELL_SIZE, CELL_SIZE))
+
+
+def counter_text(counter):
+    counter_text = COUNTER_STRING.format(
+        counter,
+        ITERATIONS,
+        COUNTER_ZERO_PADDING,
+    )
+    return PY_FONT.render(counter_text, 1, WHITE)
 
 
 def quitter() -> None:
@@ -87,12 +103,17 @@ def setup(pattern, iterations, fps):
 
 def main():
     """Main pygame loop."""
+    counter = 0
     while True:
+        counter += 1
         try:
             DISPLAYSURF.fill(BLACK)
             for event in pygame.event.get():
                 if event.type == QUIT:
                     quitter()
+
+            # show the iterations counter
+            DISPLAYSURF.blit(counter_text(counter), (10, 10))
 
             for x, y in next(GAME_STATE):
                 draw_cell(x, y)
