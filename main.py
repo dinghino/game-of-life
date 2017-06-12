@@ -12,19 +12,18 @@ from pygame.locals import QUIT
 # -- PyGame constants -------------------------------------------------
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
+WINDOW_WIDTH, WINDOW_HEIGHT = 800, 600
 WINDOW_SIZE = (WINDOW_WIDTH, WINDOW_HEIGHT)
 CELL_SIZE = 8
 FPS = 10
 
-# -- Game of Life setup -----------------------------------------------
+# -- Game of Life config ----------------------------------------------
+DEFAULT_PATTERN = './game/patterns/124p37.lif'
 ITERATIONS = 1000
-GAME_PATTERN = states.generate_from_file('./game/patterns/124p37.lif')
-GAME_STATE = game.generate(GAME_PATTERN, ITERATIONS)
+GAME_PATTERN = states.generate_from_file(DEFAULT_PATTERN)
 GAME_PATTERN_SIZE = states.get_size(GAME_PATTERN)
 
-# NOTE that the duration of the game is (ITERATIONS / FPS) seconds
+GAME_STATE = game.generate(GAME_PATTERN, ITERATIONS)
 
 # =====================================================================
 # Pygame setup
