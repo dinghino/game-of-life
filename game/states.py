@@ -19,8 +19,8 @@ def generate_from_file(filepath: str) -> set:
     http://www.conwaylife.com/ wiki section (1.05 .lif version)
 
     Returns:
-        set - a set of tuples (x, y) representing the column and the row number
-        of each symbol that is not a ``.``
+        set - a set of tuples (x, y) representing all the cells `alive` for the
+        initial state.
     """
     DATA = set()
     with open(filepath) as fo:
@@ -38,5 +38,3 @@ def generate_from_file(filepath: str) -> set:
                 xy = (line_number + line_number_correction, cn)
                 DATA.add(xy)
     return DATA
-
-

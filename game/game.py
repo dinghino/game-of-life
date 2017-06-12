@@ -5,9 +5,9 @@ from typing import Generator, Tuple
 def neighbors(point: Tuple[int]) -> Generator[Tuple[int, int], None, None]:
     """Generate all neighboring cells from a (x, y) coordinates tuple."""
     x, y = point
-    main_axis = ((1, 0), (-1, 0), (0, 1), (0, -1))
-    diagonals = ((1, 1), (1, -1), (-1, 1), (-1, -1))
-    for dx, dy in itertools.chain(main_axis, diagonals):
+    delta_orthogonal = ((1, 0), (-1, 0), (0, 1), (0, -1))
+    delta_diagonal = ((1, 1), (1, -1), (-1, 1), (-1, -1))
+    for dx, dy in itertools.chain(delta_orthogonal, delta_diagonal):
         yield (x + dx, y + dy)
 
 
@@ -22,19 +22,12 @@ def next_state(state: set) -> set:
     return new_state
 
 
-def play(initial_state, iterations=100):
+def generate(initial_state, iterations=100):
+    """
+    Generator function that performs <iterations> iterations following the
+    conway's laws on the given initial_state and yields board states.
+    """
     state = initial_state
     for _ in range(iterations):
         state = next_state(state)
         yield state
-
-
-def main():
-    import states
-
-    for state in play(states.GLIDER):
-        print(state)
-
-
-if __name__ == '__main__':
-    main()
