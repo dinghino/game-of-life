@@ -3,8 +3,7 @@ import pygame
 from typing import Tuple
 from pygame.locals import QUIT
 
-import game
-import states
+from game import game, states
 
 # =====================================================================
 # Basic setup and constants
@@ -21,7 +20,7 @@ FPS = 10
 
 # -- Game of Life setup -----------------------------------------------
 ITERATIONS = 1000
-GAME_PATTERN = states.generate_from_file('./patterns/124p37.lif')
+GAME_PATTERN = states.generate_from_file('./game/patterns/124p37.lif')
 GAME_STATE = game.conway(GAME_PATTERN, ITERATIONS)
 
 # NOTE that the duration of the game is (ITERATIONS / FPS) seconds
