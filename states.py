@@ -12,3 +12,31 @@ PULSAR = {
     (7, 4), (2, 0), (12, 4), (0, 9), (9, 5), (5, 2), (0, 2), (9, 12), (12, 8)
 }
 
+
+def generate_from_file(filepath: str) -> set:
+    """
+    Generate an initial state for the Game of Life from a pattern file from
+    http://www.conwaylife.com/ wiki section (1.05 .lif version)
+
+    Returns:
+        set - a set of tuples (x, y) representing the column and the row number
+        of each symbol that is not a ``.``
+    """
+    DATA = set()
+    with open(filepath) as fo:
+        line_number_correction = 0
+        for line_number, line in enumerate(fo.readlines()):
+            # skip commented lines and adjust the line corrector value
+            line = line.strip('\n')
+            if line.startswith('#') or not line:
+                line_number_correction -= 1
+                continue
+
+            for cn, c in enumerate(line):
+                if c == '.':
+                    continue
+                xy = (line_number + line_number_correction, cn)
+                DATA.add(xy)
+    return DATA
+
+
