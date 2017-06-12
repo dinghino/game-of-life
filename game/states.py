@@ -1,3 +1,5 @@
+from typing import Tuple
+
 GLIDER = {(0, 0), (1, 0), (2, 0), (0, 1), (1, 2)}
 OCTAGON2 = {
     (1, 2), (7, 3), (4, 7), (2, 6), (5, 1), (3, 0), (5, 6), (2, 1),
@@ -38,3 +40,12 @@ def generate_from_file(filepath: str) -> set:
                 xy = (line_number + line_number_correction, cn)
                 DATA.add(xy)
     return DATA
+
+
+def get_size(pattern: set) -> Tuple[int, int]:
+    """Return the width and height of the pattern."""
+    x = sorted(pattern, key=lambda t: t[0])
+    y = sorted(pattern, key=lambda t: t[1])
+    delta_x = x[-1][0] - x[0][0]
+    delta_y = y[-1][1] - y[0][1]
+    return delta_x, delta_y

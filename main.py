@@ -22,6 +22,7 @@ FPS = 10
 ITERATIONS = 1000
 GAME_PATTERN = states.generate_from_file('./game/patterns/124p37.lif')
 GAME_STATE = game.generate(GAME_PATTERN, ITERATIONS)
+GAME_PATTERN_SIZE = states.get_size(GAME_PATTERN)
 
 # NOTE that the duration of the game is (ITERATIONS / FPS) seconds
 
@@ -42,8 +43,8 @@ pygame.init()
 def correct_coordinate(x: int, y: int) -> Tuple[int, int]:
     """Adjust a cell's coordinates to be correctly displayed on the display."""
     return (
-        x * CELL_SIZE + WINDOW_WIDTH / 2,
-        y * CELL_SIZE + WINDOW_HEIGHT / 2
+        x * CELL_SIZE + (WINDOW_WIDTH - GAME_PATTERN_SIZE[0] * CELL_SIZE) / 2,
+        y * CELL_SIZE + (WINDOW_HEIGHT - GAME_PATTERN_SIZE[1] * CELL_SIZE) / 2
     )
 
 
