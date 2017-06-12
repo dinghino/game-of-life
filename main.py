@@ -1,9 +1,10 @@
+import argparse
 import sys
-import pygame
 from typing import Tuple
-from pygame.locals import QUIT
 
+import pygame
 from game import game, states
+from pygame.locals import QUIT
 
 # =====================================================================
 # Basic setup and constants
@@ -12,19 +13,18 @@ from game import game, states
 # -- PyGame constants -------------------------------------------------
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
+WINDOW_WIDTH, WINDOW_HEIGHT = 800, 600
 WINDOW_SIZE = (WINDOW_WIDTH, WINDOW_HEIGHT)
 CELL_SIZE = 8
 FPS = 10
 
-# -- Game of Life setup -----------------------------------------------
+# -- Game of Life config ----------------------------------------------
+DEFAULT_PATTERN = './game/patterns/124p37.lif'
 ITERATIONS = 1000
-GAME_PATTERN = states.generate_from_file('./game/patterns/124p37.lif')
-GAME_STATE = game.generate(GAME_PATTERN, ITERATIONS)
+GAME_PATTERN = states.generate_from_file(DEFAULT_PATTERN)
 GAME_PATTERN_SIZE = states.get_size(GAME_PATTERN)
 
-# NOTE that the duration of the game is (ITERATIONS / FPS) seconds
+GAME_STATE = game.generate(GAME_PATTERN, ITERATIONS)
 
 # =====================================================================
 # Pygame setup
@@ -59,21 +59,62 @@ def quitter() -> None:
     sys.exit()
 
 # =====================================================================
-# Game loop
+# Game functions
 
 
-while True:
-    try:
-        DISPLAYSURF.fill(BLACK)
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                quitter()
+def setup(pattern, iterations, fps):
+    """
+    Used to process argparse values overrides the global default configuration
+    generating new values using the given parameters (if truthy).
+    """
+    global GAME_PATTERN
+    global GAME_PATTERN_SIZE
+    global GAME_STATE
+    global ITERATIONS
+    global FPS
 
-        for x, y in next(GAME_STATE):
-            draw_cell(x, y)
+    if pattern:
+        GAME_PATTERN = states.generate_from_file(pattern)
+        GAME_PATTERN_SIZE = states.get_size(GAME_PATTERN)
+    if iterations:
+        ITERATIONS = iterations
+    if fps:
+        FPS = fps
 
-        TIMER.tick(FPS)
-        pygame.display.update()
+    if pattern or iterations:
+        GAME_STATE = game.generate(GAME_PATTERN, ITERATIONS)
 
-    except StopIteration:
-        quitter()
+
+def main():
+    """Main pygame loop."""
+    while True:
+        try:
+            DISPLAYSURF.fill(BLACK)
+            for event in pygame.event.get():
+                if event.type == QUIT:
+                    quitter()
+
+            for x, y in next(GAME_STATE):
+                draw_cell(x, y)
+
+            TIMER.tick(FPS)
+            pygame.display.update()
+
+        except StopIteration:
+            quitter()
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-p', '--pattern',
+                        help='Path to the initial pattern.')
+
+    parser.add_argument('-i', '--iterations', type=int,
+                        help='Number of iterations to perform.')
+    parser.add_argument('-f', '--fps', type=int,
+                        help='Frames per seconds to render.')
+    args = parser.parse_args()
+
+    if args.pattern or args.iterations or args.fps:
+        setup(args.pattern, args.iterations, args.fps)
+    main()
