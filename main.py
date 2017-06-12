@@ -118,8 +118,8 @@ def main():
             for x, y in next(GAME_STATE):
                 draw_cell(x, y)
 
-            TIMER.tick(FPS)
             pygame.display.update()
+            TIMER.tick(FPS)
 
         except StopIteration:
             quitter()
