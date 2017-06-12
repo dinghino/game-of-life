@@ -31,14 +31,3 @@ def generate(initial_state, iterations=100):
     for _ in range(iterations):
         state = next_state(state)
         yield state
-
-
-def main():
-    import states
-
-    for state in play(states.GLIDER):
-        print(state)
-
-
-if __name__ == '__main__':
-    main()
