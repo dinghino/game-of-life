@@ -78,7 +78,7 @@ def quitter() -> None:
 # Game functions
 
 
-def setup(pattern, iterations, fps):
+def setup(pattern=None, iterations=None, fps=None):
     """
     Used to process argparse values overrides the global default configuration
     generating new values using the given parameters (if truthy).
