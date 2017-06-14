@@ -23,6 +23,7 @@ class GameOfLife:
     ):
         self.pattern_path = pattern
         self.iterations = iterations
+        self.current_iteration = 0
 
         # -- game of life init ----------------------------------------
         self.pattern = states.generate_from_file(pattern)
@@ -44,7 +45,7 @@ class GameOfLife:
     # =================================================================
     # Utilities
 
-    def correct_coordinate(self, x: int, y: int) -> Tuple[int, int]:
+    def correct_coordinates(self, x: int, y: int) -> Tuple[int, int]:
         """
         Adjust a cell's coordinates to be correctly displayed on the display.
         """
@@ -54,19 +55,20 @@ class GameOfLife:
 
     def draw_cell(self, x: int, y: int) -> None:
         """Wrapper for the pygame.draw.rect call."""
-        x, y = self.correct_coordinate(x, y)
+        x, y = self.correct_coordinates(x, y)
         pygame.draw.rect(
             self.display, WHITE,
             (x, y, CELL_SIZE, CELL_SIZE)
         )
 
-    def counter_text(self, counter: int) -> pygame.font:
-        counter_text = COUNTER_STRING.format(
-            counter,
+    @property
+    def counter_text(self) -> pygame.font:
+        text = COUNTER_STRING.format(
+            self.current_iteration,
             self.iterations,
             self.counter_zero_padding,
         )
-        return self.font.render(counter_text, 1, WHITE)
+        return self.font.render(text, 1, WHITE)
 
     def quitter(self) -> None:
         pygame.quit()
@@ -76,9 +78,8 @@ class GameOfLife:
     # Game functions
 
     def run(self):
-        counter = 0
         while True:
-            counter += 1
+            self.current_iteration += 1
 
             for event in pygame.event.get():
                 if event.type == QUIT:
@@ -86,7 +87,7 @@ class GameOfLife:
 
             try:
                 self.display.fill(BLACK)
-                self.display.blit(self.counter_text(counter), (10, 10))
+                self.display.blit(self.counter_text, (10, 10))
 
                 for x, y in next(self.game_state):
                     self.draw_cell(x, y)
